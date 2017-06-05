@@ -20,10 +20,16 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.navercorp.pinpoint.bootstrap.context.*;
-
-
 import com.navercorp.pinpoint.bootstrap.config.Filter;
+import com.navercorp.pinpoint.bootstrap.context.Header;
+import com.navercorp.pinpoint.bootstrap.context.MethodDescriptor;
+import com.navercorp.pinpoint.bootstrap.context.RemoteAddressResolver;
+import com.navercorp.pinpoint.bootstrap.context.SpanEventRecorder;
+import com.navercorp.pinpoint.bootstrap.context.SpanId;
+import com.navercorp.pinpoint.bootstrap.context.SpanRecorder;
+import com.navercorp.pinpoint.bootstrap.context.Trace;
+import com.navercorp.pinpoint.bootstrap.context.TraceContext;
+import com.navercorp.pinpoint.bootstrap.context.TraceId;
 import com.navercorp.pinpoint.bootstrap.interceptor.AroundInterceptor;
 import com.navercorp.pinpoint.bootstrap.logging.PLogger;
 import com.navercorp.pinpoint.bootstrap.logging.PLoggerFactory;
