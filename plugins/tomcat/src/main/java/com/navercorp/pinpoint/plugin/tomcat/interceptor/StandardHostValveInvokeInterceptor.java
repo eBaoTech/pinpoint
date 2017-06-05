@@ -99,12 +99,18 @@ public class StandardHostValveInvokeInterceptor implements AroundInterceptor {
             // ------------------------------------------------------
             SpanEventRecorder recorder = trace.traceBlockBegin();
             recorder.recordServiceType(TomcatConstants.TOMCAT_METHOD);
+            registerTraceId((HttpServletRequest) args[0],trace);
         } catch (Throwable th) {
             if (logger.isWarnEnabled()) {
                 logger.warn("BEFORE. Caused:{}", th.getMessage(), th);
             }
         }
     }
+    
+    private void registerTraceId(HttpServletRequest request,Trace trace) {
+    	request.setAttribute("X-ebao-trace-id", trace.getTraceId().getTransactionId());
+    }
+
 
     public static class Bypass<T extends HttpServletRequest> implements RemoteAddressResolver<T> {
 
