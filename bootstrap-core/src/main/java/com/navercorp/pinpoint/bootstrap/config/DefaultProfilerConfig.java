@@ -16,12 +16,7 @@
 
 package com.navercorp.pinpoint.bootstrap.config;
 
-import com.navercorp.pinpoint.bootstrap.util.NumberUtils;
-import com.navercorp.pinpoint.bootstrap.util.spring.PropertyPlaceholderHelper;
-import com.navercorp.pinpoint.common.util.logger.CommonLogger;
-import com.navercorp.pinpoint.common.util.PropertyUtils;
-import com.navercorp.pinpoint.common.util.logger.StdoutCommonLoggerFactory;
-
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
@@ -31,6 +26,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
+
+import com.navercorp.pinpoint.bootstrap.util.NumberUtils;
+import com.navercorp.pinpoint.bootstrap.util.spring.PropertyPlaceholderHelper;
+import com.navercorp.pinpoint.common.util.PropertyUtils;
+import com.navercorp.pinpoint.common.util.logger.CommonLogger;
+import com.navercorp.pinpoint.common.util.logger.StdoutCommonLoggerFactory;
 
 /**
  * @author emeroad
@@ -73,7 +74,10 @@ public class DefaultProfilerConfig implements ProfilerConfig {
     public static ProfilerConfig load(String pinpointConfigFileName) throws IOException {
         try {
             Properties properties = PropertyUtils.loadProperty(pinpointConfigFileName);
+            ConfigOverrider overrideProperies=new ConfigOverrider();
+            overrideProperies.process(new File(pinpointConfigFileName).getParentFile(), properties);
             return new DefaultProfilerConfig(properties);
+            
         } catch (FileNotFoundException fe) {
             if (logger.isWarnEnabled()) {
                 logger.warn(pinpointConfigFileName + " file does not exist. Please check your configuration.");
@@ -86,8 +90,8 @@ public class DefaultProfilerConfig implements ProfilerConfig {
             throw e;
         }
     }
-
-    private boolean profileEnable = false;
+    
+	private boolean profileEnable = false;
 
     private String profileInstrumentEngine = INSTRUMENT_ENGINE_ASM;
 
@@ -153,6 +157,11 @@ public class DefaultProfilerConfig implements ProfilerConfig {
     private List<String> disabledPlugins = Collections.emptyList();
 
     private boolean propagateInterceptorException = false;
+    
+    /**
+     * 设置request 属性中的traceId的key
+     */
+    private String attributeNameOfTraceId="X-ebao-trace-id";
 
     public DefaultProfilerConfig() {
         this.properties = new Properties();
@@ -396,9 +405,12 @@ public class DefaultProfilerConfig implements ProfilerConfig {
     public String getProfileInstrumentEngine() {
         return profileInstrumentEngine;
     }
+    
+    public String getAttributeNameOfTraceId() {
+		return attributeNameOfTraceId;
+	}
 
-
-    // for test
+	// for test
     void readPropertyValues() {
         // TODO : use Properties' default value instead of using a temp variable.
         final ValueResolver placeHolderResolver = new PlaceHolderResolver();
@@ -678,6 +690,8 @@ public class DefaultProfilerConfig implements ProfilerConfig {
         builder.append(applicationTypeDetectOrder);
         builder.append(", disabledPlugins=");
         builder.append(disabledPlugins);
+        builder.append(", attributeNameOfTraceId=");
+        builder.append(attributeNameOfTraceId);
         builder.append("}");
         return builder.toString();
     }

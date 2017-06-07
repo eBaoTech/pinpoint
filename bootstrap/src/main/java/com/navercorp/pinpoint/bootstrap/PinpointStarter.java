@@ -81,7 +81,32 @@ class PinpointStarter {
     }
 
     boolean start() {
-        final IdValidator idValidator = new IdValidator();
+    	String configPath = getConfigPath(classPathResolver);
+    	if (configPath == null) {
+    		return false;
+    	}
+    	
+    	ProfilerConfig profilerConfig=null;
+    	try{
+    		// Is it right to load the configuration in the bootstrap?
+            profilerConfig = DefaultProfilerConfig.load(configPath);
+    	}catch(Exception ex){
+    		logger.warn("can not load the profiler config..", ex);
+    		return false;
+    	}
+    	
+    	if(profilerConfig==null){
+    		logger.warn("the profiler config is null,ignore start pinpoint!");
+    		return false;
+    	}
+        
+    	if(!profilerConfig.isProfileEnable())
+    	{
+    		logger.warn("the pinpoint profile is disabled!");
+    		return false;
+    	}
+          
+        final IdValidator idValidator = new EnvIdValidator(classPathResolver.getAgentDirPath());
         final String agentId = idValidator.getAgentId();
         if (agentId == null) {
             return false;
@@ -99,10 +124,7 @@ class PinpointStarter {
         ServiceTypeRegistryService serviceTypeRegistryService = new DefaultServiceTypeRegistryService(typeLoaderService, loggerFactory);
         AnnotationKeyRegistryService annotationKeyRegistryService = new DefaultAnnotationKeyRegistryService(typeLoaderService, loggerFactory);
 
-        String configPath = getConfigPath(classPathResolver);
-        if (configPath == null) {
-            return false;
-        }
+      
 
         // set the path of log file as a system property
         saveLogFilePath(classPathResolver);
@@ -110,17 +132,12 @@ class PinpointStarter {
         savePinpointVersion();
 
         try {
-            // Is it right to load the configuration in the bootstrap?
-            ProfilerConfig profilerConfig = DefaultProfilerConfig.load(configPath);
-
             // this is the library list that must be loaded
             List<URL> libUrlList = resolveLib(classPathResolver);
             AgentClassLoader agentClassLoader = new AgentClassLoader(libUrlList.toArray(new URL[libUrlList.size()]));
             final String bootClass = getBootClass();
             agentClassLoader.setBootClass(bootClass);
             logger.info("pinpoint agent [" + bootClass + "] starting...");
-
-
             AgentOption option = createAgentOption(agentId, applicationName, profilerConfig, instrumentation, pluginJars, bootstrapJarFile, serviceTypeRegistryService, annotationKeyRegistryService);
             Agent pinpointAgent = agentClassLoader.boot(option);
             pinpointAgent.start();
