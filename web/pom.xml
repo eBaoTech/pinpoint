@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.navercorp.pinpoint</groupId>
         <artifactId>pinpoint</artifactId>
-        <version>1.7.0-SNAPSHOT</version>
+        <version>1.7.0-eb-SNAPSHOT</version>
     </parent>
 
     <artifactId>pinpoint-web</artifactId>
@@ -18,6 +18,7 @@
         <sniffer.artifactid>java18</sniffer.artifactid>
         <fastxml.jackson.version>2.8.5</fastxml.jackson.version>
         <grunt.build.command>build_release_without_lint</grunt.build.command>
+		<ebao.nodejs.registry>http://repo.ebaotech.com/artifactory/api/npm/npm-all/</ebao.nodejs.registry>
     </properties>
 
     <dependencies>
@@ -426,6 +427,10 @@
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.0</version>
                 <configuration>
+					<!-- optional: where to download node from. Defaults to https://nodejs.org/dist/ -->
+					<nodeDownloadRoot>http://app.ebaotech.com/thirdparty/nodejs/</nodeDownloadRoot>
+					<!-- optional: where to download npm from. Defaults to http://registry.npmjs.org/npm/-/ -->
+					<npmDownloadRoot>http://app.ebaotech.com/thirdparty/npm/</npmDownloadRoot>
                     <workingDirectory>${basedir}/target</workingDirectory>
                     <srcdir>${basedir}/target/main/webapp</srcdir>
                     <outputdir>${basedir}/target/main/webapp</outputdir>
@@ -448,7 +453,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>install</arguments>
+                            <arguments>install --registry=${ebao.nodejs.registry}</arguments>
                         </configuration>
                     </execution>
                     <execution>

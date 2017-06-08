@@ -40,7 +40,7 @@ public class AgentDirBaseClassPathResolver implements ClassPathResolver {
 
     private final BootLogger logger = BootLogger.getLogger(this.getClass().getName());
 
-    static final String VERSION_PATTERN = "(-[0-9]+\\.[0-9]+\\.[0-9]+((\\-SNAPSHOT)|(-RC[0-9]+))?)?";
+    static final String VERSION_PATTERN = "(-[0-9]+\\.[0-9]+\\.[0-9]+\\-eb+((\\-SNAPSHOT)|(-RC[0-9]+))?)?";
     static final Pattern DEFAULT_AGENT_PATTERN = compile("pinpoint-bootstrap" + VERSION_PATTERN + "\\.jar");
     static final Pattern DEFAULT_AGENT_COMMONS_PATTERN = compile("pinpoint-commons" + VERSION_PATTERN + "\\.jar");
     static final Pattern DEFAULT_AGENT_CORE_PATTERN = compile("pinpoint-bootstrap-core" + VERSION_PATTERN + "\\.jar");

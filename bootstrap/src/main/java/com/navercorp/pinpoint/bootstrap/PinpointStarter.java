@@ -14,6 +14,7 @@
  */
 package com.navercorp.pinpoint.bootstrap;
 
+import java.io.File;
 import java.lang.instrument.Instrumentation;
 import java.net.URL;
 import java.util.ArrayList;
@@ -81,6 +82,8 @@ class PinpointStarter {
     }
 
     boolean start() {
+    	// set the path of log file as a system property
+       
     	String configPath = getConfigPath(classPathResolver);
     	if (configPath == null) {
     		return false;
@@ -105,7 +108,10 @@ class PinpointStarter {
     		logger.warn("the pinpoint profile is disabled!");
     		return false;
     	}
-          
+    	
+    	saveLogVars(profilerConfig);
+    	savePinpointVersion();
+    	
         final IdValidator idValidator = new EnvIdValidator(classPathResolver.getAgentDirPath());
         final String agentId = idValidator.getAgentId();
         if (agentId == null) {
@@ -126,10 +132,7 @@ class PinpointStarter {
 
       
 
-        // set the path of log file as a system property
-        saveLogFilePath(classPathResolver);
-
-        savePinpointVersion();
+       
 
         try {
             // this is the library list that must be loaded
@@ -151,7 +154,16 @@ class PinpointStarter {
         return true;
     }
 
-    private String getBootClass() {
+    /**
+     * 设置日志变量
+     * @param profilerConfig
+     */
+    private void saveLogVars(ProfilerConfig profilerConfig) {
+    	saveLogFilePath(profilerConfig);
+    	saveLogLevel(profilerConfig);
+	}
+
+	private String getBootClass() {
         final String agentType = getAgentType().toUpperCase();
         if (PLUGIN_TEST_AGENT.equals(agentType)) {
             return PLUGIN_TEST_BOOT_CLASS;
@@ -195,12 +207,30 @@ class PinpointStarter {
         Runtime.getRuntime().addShutdownHook(thread);
     }
 
-
-    private void saveLogFilePath(ClassPathResolver classPathResolver) {
-        String agentLogFilePath = classPathResolver.getAgentLogFilePath();
-        logger.info("logPath:" + agentLogFilePath);
-
-        systemProperty.setProperty(ProductInfo.NAME + ".log", agentLogFilePath);
+    private void saveLogFilePath(ProfilerConfig config) {
+    	String keyOfLogPath=ProductInfo.NAME + ".log";
+    	String logdir=toPath(config.readString(keyOfLogPath,"./logs"));
+    	
+    	logger.info("using pinpoint log path["+logdir+"/pinpoint.log]");
+        systemProperty.setProperty(keyOfLogPath,logdir);
+    }
+    
+    private void saveLogLevel(ProfilerConfig config) {
+    	String keyOfLogLevel=ProductInfo.NAME + ".loglevel";
+    	String value=config.readString(keyOfLogLevel,"info");
+    	
+    	logger.info("using pinpoint log level["+value+"]");
+        systemProperty.setProperty(keyOfLogLevel,value);
+    }
+    
+    private String toPath(String value){
+    	try{
+    		return new File(value).getCanonicalPath();
+    	}catch(Exception ex)
+    	{
+    		logger.warn("fail to get canonical path for["+value+"]");
+    		return value;
+    	}
     }
 
     private void savePinpointVersion() {
