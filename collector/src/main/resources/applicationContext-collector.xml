@@ -27,7 +27,7 @@
                         com.navercorp.pinpoint.common.server.bo" />
 
     <bean id="propertyConfigurer"
-          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+          class="com.navercorp.pinpoint.collector.config.ExPropertyPlaceholderConfigurer">
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
         <property name="locations">
             <list>

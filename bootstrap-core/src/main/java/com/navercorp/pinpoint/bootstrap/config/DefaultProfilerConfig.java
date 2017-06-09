@@ -16,7 +16,6 @@
 
 package com.navercorp.pinpoint.bootstrap.config;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
@@ -29,6 +28,7 @@ import java.util.regex.Pattern;
 
 import com.navercorp.pinpoint.bootstrap.util.NumberUtils;
 import com.navercorp.pinpoint.bootstrap.util.spring.PropertyPlaceholderHelper;
+import com.navercorp.pinpoint.common.util.ConfigCenterLoader;
 import com.navercorp.pinpoint.common.util.PropertyUtils;
 import com.navercorp.pinpoint.common.util.logger.CommonLogger;
 import com.navercorp.pinpoint.common.util.logger.StdoutCommonLoggerFactory;
@@ -74,8 +74,9 @@ public class DefaultProfilerConfig implements ProfilerConfig {
     public static ProfilerConfig load(String pinpointConfigFileName) throws IOException {
         try {
             Properties properties = PropertyUtils.loadProperty(pinpointConfigFileName);
-            ConfigOverrider overrideProperies=new ConfigOverrider();
-            overrideProperies.process(new File(pinpointConfigFileName).getParentFile(), properties);
+            ConfigCenterLoader configCenterLoader=new ConfigCenterLoader();
+            Properties configCenterProperties= configCenterLoader.loader();
+            ConfigCenterLoader.overrideProperies(configCenterProperties, properties);
             return new DefaultProfilerConfig(properties);
             
         } catch (FileNotFoundException fe) {

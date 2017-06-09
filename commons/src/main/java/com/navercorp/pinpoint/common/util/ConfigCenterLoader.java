@@ -1,4 +1,4 @@
-package com.navercorp.pinpoint.bootstrap.config;
+package com.navercorp.pinpoint.common.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,31 +11,42 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Properties;
 
-import com.navercorp.pinpoint.common.util.PropertyUtils;
+import com.navercorp.pinpoint.common.util.json.JsonConfigUtil;
 import com.navercorp.pinpoint.common.util.logger.CommonLogger;
 import com.navercorp.pinpoint.common.util.logger.StdoutCommonLoggerFactory;
 
 import sun.misc.BASE64Encoder;
 
+
 /**
  * 通过环境变量或者属性系统或者配置中心来获取
  * @param origin
  */
-public class ConfigOverrider {
-	private static final CommonLogger logger = StdoutCommonLoggerFactory.INSTANCE.getLogger(ConfigOverrider.class.getName());
-	public void process(File pluginsHome,Properties origin){
+public class ConfigCenterLoader {
+	private static final CommonLogger logger = StdoutCommonLoggerFactory.INSTANCE.getLogger(ConfigCenterLoader.class.getName());
+	
+	public Properties loader(){
 		File bootstrap= new File(".","conf/bootstrap.properties");
-		process(pluginsHome,origin,bootstrap);
+		Properties properties=null;
+		if(bootstrap.exists())
+		{
+			try {
+				properties=PropertyUtils.loadProperty(bootstrap.getAbsolutePath());
+			} catch (Exception e) {
+				logger.warn("error when load "+ bootstrap.getAbsolutePath(), e);
+			}
+		}
+		
+		if(properties==null)
+		{
+			properties=new Properties();
+		}
+		
+		ConfigDef configDef=new ConfigDef(properties);
+		return loadFromConfigcenter(configDef);
 	}
 	
-	public void process(File pluginsHome,Properties origin,File bootstrap){
-		Properties configCenter=loadFromConfigcenter(bootstrap);
-		overrideProperies(configCenter,origin);
-		overrideProperies(System.getProperties(),origin);
-		overrideProperies(System.getenv(),origin);
-	}
-
-	private void overrideProperies(Map<?,?> source, Properties target) {
+	public static void overrideProperies(Map<?,?> source, Properties target) {
 		for(Object key:source.keySet())
 		{
 			//如果target中不含有此配置项,放弃加入
@@ -48,13 +59,7 @@ public class ConfigOverrider {
 		}
 	}
 
-	private Properties loadFromConfigcenter(File targetFile) {
-		
-		Properties bootstrap=loadBootstrap(targetFile);
-		
-		ConfigDef configDef=new ConfigDef(bootstrap);
-		
-		
+	private Properties loadFromConfigcenter(ConfigDef configDef) {
 		logger.info("[ebao.config.center.url="+configDef.getUrl()+"]");
 		logger.info("[ebao.config.center.name="+configDef.getApplication()+"]");
 		logger.info("[ebao.config.center.profile="+configDef.getProfile()+"]");
@@ -147,25 +152,6 @@ public class ConfigOverrider {
         }
         return sb.toString();
     }
-
-	private Properties loadBootstrap(File bootstrap) {
-		try{
-			if(!bootstrap.exists())
-			{
-				logger.warn("the bootstrap.properties at "+bootstrap.getAbsolutePath()+" is not existed!");
-				return new Properties();
-			}
-			return PropertyUtils.loadProperty(bootstrap.getAbsolutePath());
-		}catch(Exception ex)
-		{
-			logger.warn("error when load bootstrap at " + bootstrap.getAbsolutePath()+",error:" + ex.getMessage());
-			return new Properties();
-		}
-		
-	}
-
-	
-	
 	public static class ConfigDef{
 		private String application=null;
 		private String url=null;

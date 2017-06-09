@@ -30,17 +30,23 @@
                                          com.navercorp.pinpoint.common.server.bo,
                                          com.navercorp.pinpoint.common.server.util" />
 
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <bean id="propertyConfigurer" class="com.navercorp.pinpoint.web.config.ExPropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
                 <value>classpath:hbase.properties</value>
                 <value>classpath:jdbc.properties</value>
+                <value>classpath:base.properties</value>
             </list>
         </property>
     </bean>
     
-    <bean id="pinpointWebProps" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="location" value="classpath:pinpoint-web.properties"/>
+    <bean id="pinpointWebProps" class="com.navercorp.pinpoint.web.config.ExPropertiesFactory">
+        <property name="locations">
+            <list>
+                <value>classpath:pinpoint-web.properties</value>
+                <value>classpath:base.properties</value>
+            </list>
+        </property>
         <property name="fileEncoding" value="UTF-8"/>
     </bean>
     

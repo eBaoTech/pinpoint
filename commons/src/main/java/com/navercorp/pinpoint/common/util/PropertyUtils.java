@@ -53,6 +53,7 @@ public final class PropertyUtils {
         };
         return loadProperty(new Properties(), inputStreamFactory, DEFAULT_ENCODING);
     }
+    
 
     public static Properties loadPropertyFromClassPath(final String classPath) throws IOException {
         if (classPath == null) {

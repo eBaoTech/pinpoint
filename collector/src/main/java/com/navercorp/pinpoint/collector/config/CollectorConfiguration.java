@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
+import com.navercorp.pinpoint.common.util.ConfigCenterLoader;
 import com.navercorp.pinpoint.common.util.PropertyUtils;
 import com.navercorp.pinpoint.common.util.SimpleProperty;
 import com.navercorp.pinpoint.common.util.SystemProperty;
@@ -297,6 +298,8 @@ public class CollectorConfiguration implements InitializingBean {
 
         try {
             Properties prop = PropertyUtils.loadProperty(configFileName);
+            Properties properties=new ConfigCenterLoader().loader();
+            ConfigCenterLoader.overrideProperies(properties,prop);
             readPropertyValues(prop);
         } catch (FileNotFoundException fe) {
             logger.error("File '{}' is not exists. Please check configuration.", configFileName, fe);
