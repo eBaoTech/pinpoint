@@ -202,6 +202,7 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>${docker.maven.plugin.version}</version>
                 <configuration>
+                	<useConfigFile>true</useConfigFile>
                     <skipDockerBuild>false</skipDockerBuild>
                     <imageName>${docker.repo}/${docker.prefix}/${project.artifactId}:${project.version}</imageName>
                     <baseImage>${docker.repo}/tomcat:8-jre8</baseImage>
