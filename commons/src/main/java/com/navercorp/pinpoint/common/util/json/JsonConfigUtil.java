@@ -10,7 +10,7 @@ public class JsonConfigUtil {
 		List<String> names= datas.names();
 		Map<String,Object> values=new HashMap<String,Object>();
 		for(String name:names){
-			values.put(name,datas.get(name));
+			values.put(name,datas.get(name).asString());
 		}
 		return values;
 	}

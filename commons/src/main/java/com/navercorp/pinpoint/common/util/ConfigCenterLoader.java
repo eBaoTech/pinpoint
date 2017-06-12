@@ -42,7 +42,11 @@ public class ConfigCenterLoader {
 			properties=new Properties();
 		}
 		
-		ConfigDef configDef=new ConfigDef(properties);
+		return loader(properties);
+	}
+	
+	public Properties loader(Properties origin){
+		ConfigDef configDef=new ConfigDef(origin);
 		return loadFromConfigcenter(configDef);
 	}
 	

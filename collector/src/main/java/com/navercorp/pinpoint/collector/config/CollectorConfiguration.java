@@ -298,8 +298,6 @@ public class CollectorConfiguration implements InitializingBean {
 
         try {
             Properties prop = PropertyUtils.loadProperty(configFileName);
-            Properties properties=new ConfigCenterLoader().loader();
-            ConfigCenterLoader.overrideProperies(properties,prop);
             readPropertyValues(prop);
         } catch (FileNotFoundException fe) {
             logger.error("File '{}' is not exists. Please check configuration.", configFileName, fe);
@@ -312,6 +310,8 @@ public class CollectorConfiguration implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(properties);
+        Properties configCenterProperties=new ConfigCenterLoader().loader(properties);
+        ConfigCenterLoader.overrideProperies(configCenterProperties,properties);
         readPropertyValues(this.properties);
     }
 
