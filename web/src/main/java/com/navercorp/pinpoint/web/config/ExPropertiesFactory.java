@@ -9,12 +9,11 @@ import com.navercorp.pinpoint.common.util.ConfigCenterLoader;
 
 public class ExPropertiesFactory extends PropertiesFactoryBean {
 	protected Properties mergeProperties() throws IOException {
-		Properties result=new Properties();
+		Properties result=super.mergeProperties();
 		ConfigCenterLoader configCenterLoader=new ConfigCenterLoader();
 		
-		Properties properties= configCenterLoader.loader();
+		Properties properties= configCenterLoader.loader(result);
 		ConfigCenterLoader.overrideProperies(properties, result);
 		return result;
-		
 	}
 }
