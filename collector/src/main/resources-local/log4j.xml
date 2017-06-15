@@ -21,21 +21,25 @@
     <logger name="com.navercorp.pinpoint" additivity="false">
         <level value="DEBUG"/>
         <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender" />
     </logger>
 
     <logger name="com.navercorp.pinpoint.collector.dao" additivity="false">
         <level value="TRACE"/>
         <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender" />
     </logger>
 
 
     <logger name="org.apache.zookeeper" additivity="false">
-        <level value="INFO"/>
+        <level value="DEBUG"/>
         <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender" />
     </logger>
 
     <logger name="org.apache.hadoop.hbase" additivity="false">
-        <level value="INFO"/>
+        <level value="DEBUG"/>
+        <appender-ref ref="stat-appender" />
         <appender-ref ref="console"/>
     </logger>
 
@@ -47,7 +51,8 @@
     </logger>
 
     <root>
-        <level value="INFO"/>
+        <level value="DEBUG"/>
+        <appender-ref ref="stat-appender" />
         <appender-ref ref="console"/>
     </root>
 </log4j:configuration>
