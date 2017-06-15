@@ -17,6 +17,9 @@ import com.navercorp.pinpoint.common.util.PropertyUtils;
 public class EnvIdValidator extends IdValidator {
 	private final BootLogger logger = BootLogger.getLogger(EnvIdValidator.class.getName());
 	private static final int MAX_SIZE=24;
+	private static final String ID_STRATEGY_RANDOM="random";
+	private static final String ID_STRATEGY_SAME="same";
+	private static final String ID_STRATEGY_ASSIGN="assign";
 	private String pluginDir=null;
 	private String appName=null;
 	private String agentId=null;
@@ -27,11 +30,52 @@ public class EnvIdValidator extends IdValidator {
 		agentId=resolveAgentId();
 	}
 	
-	private String resolveAgentId() {
-		String hostName=System.getenv("HOSTNAME");
-		hostName=hostName+"-"+appName+"-"+pluginDir;
-		String result= IdBuilder.generateId(hostName);
-		logger.info("using ["+hostName+"] for raw agent id,encoded result is " + result);
+	/**
+	 * control agent id base on strategy
+	 * @return
+	 */
+	protected String resolveAgentId() {
+		String idStrategy=System.getenv("pinpoint.agent.id.strategy");
+		String result=null;
+		
+		logger.info("using ["+idStrategy+"] for building agent id");
+		if(idStrategy==null)
+		{
+			idStrategy=ID_STRATEGY_SAME;
+		}
+		
+		if(idStrategy!=null)
+		{
+			if(idStrategy.equals(ID_STRATEGY_SAME))
+			{
+				result=appName;
+			}
+			
+			if(idStrategy.equals(ID_STRATEGY_RANDOM))
+			{
+				String hostName=System.getenv("HOSTNAME");
+				hostName=hostName+"-"+appName+"-"+pluginDir;
+				result= IdBuilder.generateId(hostName);
+				logger.info("build random id base on ["+hostName+"],encoded result is " + result);
+			}
+			
+			if(idStrategy.equals(ID_STRATEGY_ASSIGN))
+			{
+				String key="pinpoint.agentId";
+				result=System.getenv(key);
+				if(result==null)
+				{
+					result=System.getProperty(key);
+				}
+			}
+		}
+		
+		if(result==null || result.length()==0)
+		{
+			throw new RuntimeException("fail  to decide the pinpoint agent id");
+		}
+		
+		logger.info("using ["+idStrategy+"] for building agent id,encoded result is " + result);
 		return result;
 	}
 
