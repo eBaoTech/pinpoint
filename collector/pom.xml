@@ -17,7 +17,7 @@
         <sniffer.artifactid>java18</sniffer.artifactid>
         <fastxml.jackson.version>2.8.5</fastxml.jackson.version>
         <docker.repo>docker-all.repo.ebaotech.com</docker.repo>
-		<docker.prefix>ebaocloud</docker.prefix><!-- 此属性定义了docker镜像交付时的名称空间 -->
+		<docker.prefix>ebaocloud/dev</docker.prefix><!-- 此属性定义了docker镜像交付时的名称空间 -->
     </properties>
 
     <dependencies>
@@ -206,6 +206,9 @@
                     <skipDockerBuild>false</skipDockerBuild>
                     <imageName>${docker.repo}/${docker.prefix}/${project.artifactId}:${project.version}</imageName>
                     <baseImage>${docker.repo}/tomcat:8-jre8</baseImage>
+                    <imageTags>
+                    	<imageTag>latest</imageTag>
+                    </imageTags>
                     <entryPoint>
                         ["/usr/local/bin/start-collector.sh"]
                     </entryPoint>
