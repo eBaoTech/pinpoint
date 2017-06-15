@@ -41,12 +41,15 @@ public class EnvIdValidator extends IdValidator {
 			File pluginHome=new File(pluginDir);
 			if(pluginHome.exists())
 			{
-				File bootstrapFile=new File(pluginHome.getParent()+"../../conf/bootstrap.properties");
+				File bootstrapFile= new File(".","conf/bootstrap.properties");
 				if(bootstrapFile.exists() && bootstrapFile.isFile())
 				{
 					Properties bootstrap=PropertyUtils.loadProperty(bootstrapFile.getCanonicalPath());
 					logger.info("success find bootstrap.properties,use it to get applicationName");
 					applicationName=format(bootstrap.getProperty("spring.application.name"));
+				}else
+				{
+					logger.warn("can not find bootstrap.properties at "+bootstrapFile.getCanonicalPath());
 				}
 			}
 		}catch(Exception ex)
