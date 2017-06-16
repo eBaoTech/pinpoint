@@ -102,11 +102,25 @@ public class BusinessTransactionController {
         ApplicationMap map = filteredMapService.selectApplicationMap(transactionId);
         RecordSet recordSet = this.transactionInfoService.createRecordSet(callTreeIterator, focusTimestamp, agentId, spanId);
 
-        TransactionInfoViewModel result = new TransactionInfoViewModel(transactionId, map.getNodes(), map.getLinks(), recordSet, spanResult.getCompleteTypeString(), logLinkEnable, logButtonName, logPageUrl, disableButtonMessage);
+        String logUrl=buildLogUrl(logPageUrl,traceIdParam);
+        TransactionInfoViewModel result = new TransactionInfoViewModel(transactionId, map.getNodes(), map.getLinks(), recordSet, spanResult.getCompleteTypeString(), logLinkEnable, logButtonName, logUrl, disableButtonMessage);
         return result;
     }
 
-    @RequestMapping(value = "/sqlBind", method = RequestMethod.POST)
+    protected String buildLogUrl(String rawUrl, String traceIdParam) {
+    	if(rawUrl==null){
+    		return null;
+    	}
+    	
+    	if(traceIdParam==null)
+    	{
+    		return null;
+    	}
+		String tid= traceIdParam.replaceAll("\\^","-");
+		return rawUrl.replace("${traceid}", tid);
+	}
+
+	@RequestMapping(value = "/sqlBind", method = RequestMethod.POST)
     @ResponseBody
     public String sqlBind(@RequestParam("sql") String sql,
                           @RequestParam("bind") String bind) {
