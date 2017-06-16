@@ -171,6 +171,10 @@ public class ConfigCenterLoader {
 		
 		private void init(Properties bootstrap) {
 			application=findConfig(bootstrap,"spring.application.name");
+			if(application==null)
+			{
+				application=findConfig(bootstrap,"pinpoint.applicationName");
+			}
 			url=findConfig(bootstrap,"ebao.config.center.url");
 			username=findConfig(bootstrap,"ebao.config.center.username");
 			password=findConfig(bootstrap,"ebao.config.center.password");

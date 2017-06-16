@@ -103,7 +103,13 @@ public class EnvIdValidator extends IdValidator {
 		if(applicationName==null)
 		{
 			logger.info("not find bootstrap.properties,use env to get applicationName");
-			applicationName=format(System.getenv().get("pinpoint.applicationName"));
+			applicationName=format(System.getenv().get("spring.application.name"));
+		}
+		
+		if(applicationName==null)
+		{
+			logger.info("not find bootstrap.properties,use env to get applicationName");
+			applicationName=format(System.getProperty("spring.application.name"));
 		}
 		
 		if(applicationName==null)
