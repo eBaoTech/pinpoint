@@ -115,13 +115,15 @@ public class TransactionInfoViewModel {
     @JsonProperty("logPageUrl")
     public String getLogPageUrl() {
         if (StringUtils.isNotEmpty(logPageUrl)) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("transactionId=").append(getTransactionId());
-            sb.append("&time=").append(recordSet.getStartTime());
-            return logPageUrl + "?" + sb.toString();
+//            StringBuilder sb = new StringBuilder();
+//            sb.append("transactionId=").append(getTransactionId());
+//            sb.append("&time=").append(recordSet.getStartTime());
+//            return logPageUrl + "?" + sb.toString();
+        	return logPageUrl;
+        }else
+        {
+        	return "";
         }
-
-        return "";
     }
 
     @JsonProperty("disableButtonMessage")
