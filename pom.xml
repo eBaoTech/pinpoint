@@ -92,6 +92,7 @@
         <docker.maven.plugin.version>0.4.11</docker.maven.plugin.version>
         <cassandra.driver.version>2.1.7.1</cassandra.driver.version>
         <sniffer.artifactid>java16</sniffer.artifactid>
+		<docker.image.version>dev</docker.image.version>
     </properties>
 
     <dependencies>
@@ -1031,7 +1032,19 @@
                 <env>release</env>
             </properties>
         </profile>
-
+		
+		<!-- 如果启用这个profile,可以保证docker的交付到目标的namespace下 -->
+		<profile>
+			<id>ebaocloud-product</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<!-- 产品环境使用 -->
+				<docker.image.version>${project.version}</docker.image.version>
+			</properties>
+		</profile>
+		
         <profile>
             <id>klocwork</id>
             <build>
