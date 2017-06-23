@@ -363,7 +363,7 @@
                 <configuration>
                 	<useConfigFile>true</useConfigFile>
                     <skipDockerBuild>false</skipDockerBuild>
-                    <imageName>${docker.repo}/${docker.prefix}/${project.artifactId}:dev</imageName>
+                    <imageName>${docker.repo}/${docker.prefix}/${project.artifactId}</imageName>
                     <baseImage>${docker.repo}/tomcat:8-jre8</baseImage>
                     <imageTags>
                     	<imageTag>${docker.image.version}</imageTag>
