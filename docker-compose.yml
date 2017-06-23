@@ -1,37 +1,35 @@
-version: '2'
+version: "2"
 services:
-	pinpoint-collector:
-	  container_name: pinpoint-collector
-	  hostname: collector
-	  image: docker-all.repo.ebaotech.com/ebaocloud/pinpoint-collector:dev
-	  restart: always
-	  expose:
-		- "9994"
-		- "9995"
-		- "9996"
-	  ports:
-		- "9994:9994"
-		- "9995:9995/tcp"
-		- "9996:9996/tcp"
-		- "9995:9995/udp"
-		- "9996:9996/udp"
-	  environment:
-		ebao.config.center.profile:	ec-test
-		ebao.config.center.url:	http://172.25.12.166:7101
-	  links:
-		- hbase-docker:hbase-docker
-	 
-	pinpoint-web:
-	  container_name: pinpoint-web
-	  hostname: web
-	  image: docker-all.repo.ebaotech.com/ebaocloud/pinpoint-web:dev
-	  restart: always
-	  expose:
-		- "8080"
-	  ports:
-		- "7071:8080"
-	  environment:
-		ebao.config.center.profile:	ec-test
-		ebao.config.center.url:	http://172.25.12.166:7101
-	  links:
-		- hbase-docker:hbase-docker
+  pinpoint-collector:
+    container_name: pinpoint-collector
+    image: docker-all.repo.ebaotech.com/ebaocloud/pinpoint-collector:dev
+    restart: always
+    expose:
+      - "9994"
+      - "9995"
+      - "9996"
+    ports:
+      - "9994:9994"
+      - "9995:9995/tcp"
+      - "9996:9996/tcp"
+      - "9995:9995/udp"
+      - "9996:9996/udp"
+    network_mode: "bridge"
+    environment:
+      ebao.config.center.profile: ec-test
+      ebao.config.center.url: http://172.25.12.166:7101
+    external_links:
+      - "hbase-docker:hbase-docker"
+
+  pinpoint-web:
+    container_name: pinpoint-web
+    image: docker-all.repo.ebaotech.com/ebaocloud/pinpoint-web:dev
+    restart: always
+    expose:
+      - "8080"
+    ports:
+      - "7080:8080"
+    network_mode: "bridge"
+    environment:
+      ebao.config.center.profile: ec-test
+      ebao.config.center.url: http://172.25.12.166:7101
