@@ -13,86 +13,95 @@
             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} [%-5p](%-35.35c{1.}:%-3L) %m%n"/>
         </layout>
     </appender>
+    
+    <appender name="stat-appender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="${catalina.home}/logs/pinpoint-web.log"/>
+        <param name="Append" value="true"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.EnhancedPatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} [%-5p](%-35.35c{1.}) %m%n"/>
+        </layout>
+    </appender>
 
     <logger name="com.navercorp.pinpoint" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
 
     <logger name="com.navercorp.pinpoint.web.filter" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
 
     <logger name="com.navercorp.pinpoint.web.controller" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
 
     <logger name="com.navercorp.pinpoint.web.applicationmap" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
 
     <logger name="com.navercorp.pinpoint.web.calltree.server" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
 
     <logger name="com.navercorp.pinpoint.web.mapper" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
 
     <logger name="com.navercorp.pinpoint.web.service" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
 
     <logger name="com.navercorp.pinpoint.web.dao" additivity="false">
        	<level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
 
     <logger name="com.navercorp.pinpoint.web.mapper.ApiMetaDataMapper" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
 
     <logger name="com.ibatis" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
 
     <logger name="org.springframework" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
 
     <logger name="org.apache.zookeeper" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
     <logger name="org.apache.zookeeper.ZooKeeper" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
     <logger name="org.apache.zookeeper.ClientCnxn" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
 
     <logger name="org.apache.hadoop.hbase" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
     <logger name="org.apache.hadoop.ipc" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
     <logger name="org.apache.hadoop" additivity="false">
         <level value="${pinpoint.level}"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="stat-appender"/>
     </logger>
 
     <root>
