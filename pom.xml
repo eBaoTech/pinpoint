@@ -92,7 +92,7 @@
         <docker.maven.plugin.version>0.4.11</docker.maven.plugin.version>
         <cassandra.driver.version>2.1.7.1</cassandra.driver.version>
         <sniffer.artifactid>java16</sniffer.artifactid>
-		<docker.image.version>dev</docker.image.version>
+		<docker.image.version>latest</docker.image.version>
     </properties>
 
     <dependencies>

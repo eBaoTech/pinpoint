@@ -2,7 +2,7 @@ version: "2"
 services:
   pinpoint-collector:
     container_name: pinpoint-collector
-    image: docker-all.repo.ebaotech.com/ebaocloud/pinpoint-collector:dev
+    image: docker-all.repo.ebaotech.com/ebaocloud/pinpoint-collector:latest
     restart: always
     expose:
       - "9994"
@@ -23,7 +23,7 @@ services:
 
   pinpoint-web:
     container_name: pinpoint-web
-    image: docker-all.repo.ebaotech.com/ebaocloud/pinpoint-web:dev
+    image: docker-all.repo.ebaotech.com/ebaocloud/pinpoint-web:latest
     restart: always
     expose:
       - "8080"
